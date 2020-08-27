@@ -1,5 +1,5 @@
 class Offer {
-  constructor(strLength, fileName, language) {
+  constructor(strLength, fileName, language, date = new Date()) {
     this.priceForOne = {
       english: 0.12,
       ukraine: 0.05,
@@ -16,16 +16,19 @@ class Offer {
       english: 333,
       ukraine: 1333,
     };
+    this.date = date
     this.timeForWork = 0;
     this.minTimeForWork = 60;
     this.startWork = 10;
     this.endWork = 19;
-    this.day = new Date().getDate();
-    this.month = new Date().getMonth();
-    this.year = new Date().getFullYear();
-    this.week = new Date().getDay();
-    this.hours = new Date().getHours()
-    this.minutes = new Date().getMinutes()
+    this.day = this.date.getDate();
+    this.changeDay = this.day;
+    this.month = this.date.getMonth();
+    this.year = this.date.getFullYear();
+    this.week = this.date.getDay();
+    this.changeWeek = this.week
+    this.hours = this.date.getHours()
+    this.minutes = this.date.getMinutes()
     this.finishDate = [];
     this.addTime = 30;
     this.price = 0;
@@ -34,31 +37,31 @@ class Offer {
     this.language = language;
   }
   getDay(){
-    if(this.week > 6){
-      this.day += 2
-      this.week -= 5
+    if(this.changeWeek > 6){
+      this.changeDay += 2
+      this.changeWeek -= 5
       this.getDay()
     }
-    else if(this.week === 0){
-      this.day += 1
+    else if(this.changeWeek === 0){
+      this.changeDay += 1
     }
-    else if(this.week === 6){
-      this.day += 2
+    else if(this.changeWeek === 6){
+      this.changeDay += 2
     }
   }
   getHours(hours,min) {
     if (hours + this.startWork > this.endWork) {
       hours = hours - this.endWork + this.startWork;
-      this.day++;
-      this.week++;
+      this.changeDay++;
+      this.changeWeek++;
       return this.getHours(hours, min);
     } else if ((this.endWork - hours - this.startWork === 0)) {
       if( min !== '30'){
         return this.endWork
       }
       else{
-        this.day++;
-        this.week++;
+        this.changeDay++;
+        this.changeWeek++;
         return this.startWork
       }
     } else {
@@ -69,9 +72,9 @@ class Offer {
     if (hours + this.hours < this.endWork) {
       hours = hours + this.hours;
     } else {
-      if(this.week !== 6){
-        this.day++;
-        this.week++;
+      if(this.changeWeek !== 6){
+        this.changeDay++;
+        this.changeWeek++;
       }
       hours = hours + this.hours - this.endWork
       hours = this.getHours(hours,this.finishDate[4]);
@@ -93,12 +96,10 @@ class Offer {
       hours = this.calculateHours(hours)
       this.finishDate[3] = String(hours);
       this.getDay()
-      this.finishDate[0] = String((new Date(this.year,this.month,this.day)).getDate()).padStart(2,'0');
-      this.finishDate[1] = String((new Date(this.year,this.month,this.day)).getMonth() + 1).padStart(2,'0');
-      this.finishDate[2] = String((new Date(this.year,this.month,this.day)).getFullYear());
-
-      this.day = new Date().getDate();
-      this.week = new Date().getDay();
+      this.finishDate[0] = String((new Date(this.year,this.month,this.changeDay)).getDate()).padStart(2,'0');
+      this.finishDate[1] = String((new Date(this.year,this.month,this.changeDay)).getMonth() + 1).padStart(2,'0');
+      this.finishDate[2] = String((new Date(this.year,this.month,this.changeDay)).getFullYear());
+      this.finishDate = `${this.finishDate[0]}/${this.finishDate[1]}/${this.finishDate[2]} ${this.finishDate[3]}:${this.finishDate[4]}`
   }
 
   calculatePriceAndTime(priceForOne, minPrice, percentage, timeForHour) {
