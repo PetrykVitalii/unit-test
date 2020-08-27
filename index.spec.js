@@ -1,6 +1,6 @@
 const Offer = require("./index");
 
-secont describe('big offer price', () => {
+describe('big offer price', () => {
   test.each`
     language     | percentage      | result
     ${'ru'}      | ${'str.doc'}    | ${50}
